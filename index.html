@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vaultly — Password Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">V</div>
+        <span>Vaultly</span>
+      </div>
+
+      <div class="profile-card">
+        <div class="avatar">AK</div>
+        <div>
+          <strong>Alex Kim</strong>
+          <span>Personal vault</span>
+        </div>
+        <button class="icon-button subtle" aria-label="Account menu">⌄</button>
+      </div>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="all"><span class="nav-icon">▦</span>All items <b id="allCount">0</b></button>
+        <button class="nav-item" data-view="favorites"><span class="nav-icon">★</span>Favorites <b id="favoriteCount">0</b></button>
+        <button class="nav-item" data-view="recent"><span class="nav-icon">◷</span>Recently used</button>
+      </nav>
+
+      <div class="nav-label">Vaults</div>
+      <nav class="main-nav">
+        <button class="nav-item" data-view="personal"><span class="nav-icon">⌂</span>Personal vault</button>
+        <button class="nav-item" data-view="shared"><span class="nav-icon">♧</span>Shared with me</button>
+      </nav>
+
+      <div class="nav-label">Types</div>
+      <nav class="main-nav type-nav">
+        <button class="nav-item" data-view="login"><span class="type-dot login-dot"></span>Logins</button>
+        <button class="nav-item" data-view="card"><span class="type-dot card-dot"></span>Cards</button>
+        <button class="nav-item" data-view="identity"><span class="type-dot identity-dot"></span>Identities</button>
+        <button class="nav-item" data-view="note"><span class="type-dot note-dot"></span>Secure notes</button>
+        <button class="nav-item" data-view="ssh"><span class="type-dot ssh-dot"></span>SSH keys</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="nav-item"><span class="nav-icon">⚙</span>Settings</button>
+        <button class="nav-item"><span class="nav-icon">?</span>Help center</button>
+        <div class="security-tip"><span class="shield">✓</span><div><strong>Vault protected</strong><small>Last checked just now</small></div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand"><div class="brand-mark">V</div> Vaultly</div>
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" type="search" placeholder="Search your vault" autocomplete="off">
+          <kbd>⌘ K</kbd>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button notification" aria-label="Notifications">♢<i></i></button>
+          <button class="avatar small-avatar">AK</button>
+        </div>
+      </header>
+
+      <section class="content-wrap">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow" id="viewEyebrow">PERSONAL VAULT</div>
+            <h1 id="pageTitle">All items</h1>
+            <p id="pageDescription">Everything you’ve saved in one secure place.</p>
+          </div>
+          <button id="addButton" class="primary-button"><span>＋</span> Add item</button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card"><span class="stat-icon purple">▦</span><div><span>Total items</span><strong id="totalStat">0</strong></div></div>
+          <div class="stat-card"><span class="stat-icon orange">♧</span><div><span>Favorites</span><strong id="favoriteStat">0</strong></div></div>
+          <div class="stat-card"><span class="stat-icon green">✓</span><div><span>Password health</span><strong>Good <em>86%</em></strong></div></div>
+          <div class="stat-card"><span class="stat-icon blue">◷</span><div><span>Last updated</span><strong>Just now</strong></div></div>
+        </div>
+
+        <div class="toolbar">
+          <div class="filter-pills" id="filterPills">
+            <button class="filter-pill active" data-filter="all">All <span id="pillAll">0</span></button>
+            <button class="filter-pill" data-filter="login">Logins <span id="pillLogin">0</span></button>
+            <button class="filter-pill" data-filter="card">Cards <span id="pillCard">0</span></button>
+            <button class="filter-pill" data-filter="identity">Identities <span id="pillIdentity">0</span></button>
+            <button class="filter-pill" data-filter="note">Notes <span id="pillNote">0</span></button>
+            <button class="filter-pill" data-filter="ssh">SSH keys <span id="pillSsh">0</span></button>
+          </div>
+          <div class="view-actions">
+            <select id="sortSelect" aria-label="Sort items">
+              <option value="updated">Recently updated</option>
+              <option value="name">Name A–Z</option>
+              <option value="type">Type</option>
+            </select>
+            <button id="gridButton" class="view-button active" aria-label="Grid view">▦</button>
+            <button id="listButton" class="view-button" aria-label="List view">☷</button>
+          </div>
+        </div>
+
+        <div id="itemsGrid" class="items-grid"></div>
+        <div id="emptyState" class="empty-state hidden"><div class="empty-illustration">⌕</div><h2>No items found</h2><p>Try a different search or add a new item to your vault.</p><button class="secondary-button" id="emptyAddButton">Add your first item</button></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="itemModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><div><span class="eyebrow">NEW VAULT ITEM</span><h2 id="modalTitle">Add an item</h2></div><button class="close-button" id="closeModal">×</button></div>
+      <div class="type-selector" id="typeSelector">
+        <button class="type-option active" data-type="login"><span class="type-dot login-dot"></span>Login</button>
+        <button class="type-option" data-type="card"><span class="type-dot card-dot"></span>Card</button>
+        <button class="type-option" data-type="identity"><span class="type-dot identity-dot"></span>Identity</button>
+        <button class="type-option" data-type="note"><span class="type-dot note-dot"></span>Secure note</button>
+        <button class="type-option" data-type="ssh"><span class="type-dot ssh-dot"></span>SSH key</button>
+      </div>
+      <form id="itemForm">
+        <div class="form-grid">
+          <label class="full">Name<input name="name" required placeholder="e.g. GitHub"></label>
+          <label class="full">Folder<select name="folder"><option>Personal</option><option>Work</option><option>Finance</option><option>Travel</option></select></label>
+          <div id="dynamicFields" class="full"></div>
+        </div>
+        <div class="form-footer"><label class="checkbox-label"><input type="checkbox" name="favorite"> Add to favorites</label><div><button type="button" class="secondary-button" id="cancelModal">Cancel</button><button class="primary-button" type="submit">Save item</button></div></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"><span>✓</span><p>Item saved to your vault.</p></div>
+  <script src="script.js"></script>
+</body>
+</html>
